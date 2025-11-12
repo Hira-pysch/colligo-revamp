@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collgo - Smart Attendance System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+ <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-circle"></div>
+                COLLIGO
+            </a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="login.html">Log In</a></li>
+                    <li><a href="signup.html">Sign Up</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>COLLIGO</h1>
+                <p class="tagline-line-1">One Smart Attendance System.</p>
+                <p class="tagline-line-2">Endless Possibilities.</p>
+            </div>
+        </div>
+    </main>
+    
+    <section class="features-section">
+        <div class="container">
+            <div class="feature-grid">
+                
+                <div class="feature-block block-dark">
+                    <div class="block-content">
+                        <h2>Smart Attendance That Adapts </h2>
+                        <p>Collgo is an all-in-one attendance system built for schools, offices, and events. Track, manage, and analyze attendance in real time effortlessly and accurately.</p>
+                    </div>
+                    <div class="block-icon"></div>
+                </div>
+
+                <div class="feature-block block-white">
+                    <div>
+                        <h2>What We Offer?</h2>
+                        <p class="offer-list">Smart Attendance Tracking, Real-Time Reports, User Management, QR Check-ins, Analytics Dashboard, and Flexible Modes for School, Office, or Event use.</p>
+                    </div>
+                    <a href="#modes-anchor" class="check-out-button">
+                        Check it Out <span class="arrow">&rarr;</span>
+                    </a>
+                </div>
+
+                <div class="feature-block block-green">
+                    <h3>5,000</h3>
+                    <p class="block-subheader">check-ins Processed</p>
+                    <p class="block-description">Trusted by teams and institutions to handle attendance seamlessly fast, secure, and reliable.</p>
+                </div>
+
+                <div class="feature-block block-light-blue">
+                    <h3>99.9%</h3>
+                    <p class="block-subheader">Accuracy Rate</p>
+                    <p class="block-description">Automated time logging and data validation ensure every record is precise, no manual errors, no missing entries.</p>
+                </div>
+
+                <div class="feature-block block-lime">
+                    <h3>Built for Any Environment</h3>
+                    <p class="block-description">From classrooms to corporate floors to large-scale events. Collgo adapts to your needs with flexibility and power.</p>
+                </div>
+
+            </div>
+            
+        </div>
+    </section>
+
+    <section class="modes-section" id="modes-anchor">
+        <div class="container">
+            <div class="modes-grid">
+                
+                <div class="mode-block mode-school">
+                    <div class="mode-header">
+                        <h2>FOR SCHOOLS</h2>
+                        <p class="mode-subtitle">Smart Attendance for Smarter Classrooms</p>
+                    </div>
+                    <div class="mode-content">
+                        <p class="mode-description-lg">Simplify roll calls and monitor attendance in real time.</p>
+                        <p class="mode-description">Collgo helps teachers, admins, and students stay organized with digital records, automatic summaries, and performance insights that make attendance effortless.</p>
+                        <a href="signup.html" class="mode-sign-up mode-sign-up-light">Sign Up</a>
+                    </div>
+                    <div class="block-icon"></div>
+                </div>
+
+                <div class="mode-block mode-office">
+                    <div class="mode-header">
+                        <h2>FOR OFFICES & ENTERPRISES</h2>
+                        <p class="mode-subtitle">Workplace Attendance That Works for You</p>
+                    </div>
+                    <div class="mode-content">
+                        <p class="mode-description-lg">Track employee check-ins, manage shifts, and access detailed analytics all from one dashboard.</p>
+                        <p class="mode-description">Collgo empowers HR and management teams with automation, transparency, and accuracy at scale.</p>
+                    </div>
+                    <div class="block-icon"></div>
+                </div>
+                
+                <div class="mode-block mode-event">
+                    <div class="mode-header">
+                        <h2>FOR EVENTS</h2>
+                        <p class="mode-subtitle mode-subtitle-blue">Effortless Event Check-Ins</p>
+                    </div>
+                    <div class="mode-content">
+                        <p class="mode-description-lg">From conferences to community gatherings, Collgo ensures smooth entry and attendance tracking.</p>
+                        <p class="mode-description">Manage participants, generate reports instantly, and focus on engagement instead of spreadsheets.</p>
+                    </div>
+                    <div class="block-icon"></div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container cta-content">
+            <div class="cta-logo-ring"></div>
+            <h2>Stay Updated with Collgo</h2>
+            <p>Be the first to know about new features, updates, and tools that make attendance management smarter for schools, offices, and events.</p>
+            <a href="#" class="cta-button">Get Early Access</a>
+            <div class="social-connect">
+                <p>Connect with us</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter-square"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p class="company-name">VICRONIX TECH COMPANY</p>
+        </div>
+    </footer>
+    
+    <script type="module">
+       
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        
+        let db = null;
+        let auth = null;
+        let userId = null; 
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        
+        async function initializeFirebase() {
+            
+            await new Promise(resolve => setTimeout(resolve, 0));
+            
+            try {
+                
+                const firebaseConfig = {
+                    apiKey: "AIzaSyDByxtekgi1CRBs0FWpSstrIWMlDbv1CHA",
+                    authDomain: "responsive-app-df28f.firebaseapp.com",
+                    projectId: "responsive-app-df28f",
+                    storageBucket: "responsive-app-df28f.firebasestorage.app",
+                    messagingSenderId: "242703032257",
+                    appId: "1:242703032257:web:cf20ab70b92fa3609e5940",
+                    measurementId: "G-MK0XLZ808S"
+                };
+                
+              
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                
+                setLogLevel('debug'); 
+
+               
+                let userCredential;
+                
+                if (initialAuthToken) {
+                 
+                    userCredential = await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    
+                    userCredential = await signInAnonymously(auth);
+                }
+
+                userId = userCredential.user.uid;
+
+                console.log(`[COLLIGO] Firebase connected. User ID: ${userId}, App ID: ${appId}`);
+                
+            } catch (error) {
+                console.error(`[COLLIGO] FATAL ERROR: Firebase Initialization Failed.`, error.message);
+            }
+        }
+
+        
+        window.onload = initializeFirebase;
+    </script>
+  
+</body>
+</html>

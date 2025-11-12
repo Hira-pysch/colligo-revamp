@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collgo - Add Member</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css"> 
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <style>
+        /* Specific styles for the Add Member Form */
+        .add-member-form-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: var(--dark-block-bg);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ... (rest of the styles are same as previous) ... */
+        
+        .form-title {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 5px;
+        }
+
+        .form-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
+            font-size: 1em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-white);
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: var(--input-bg-blue);
+            color: var(--text-white);
+            border-radius: 8px;
+            font-size: 1em;
+            outline: none;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2392F750'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 12px;
+            cursor: pointer;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .cancel-button {
+            background-color: transparent;
+            color: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            display: flex; 
+            align-items: center;
+        }
+
+        .cancel-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .submit-button {
+            background-color: var(--accent-green);
+            color: var(--text-dark);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .submit-button:hover {
+            background-color: #72db36;
+            transform: translateY(-1px);
+        }
+        
+        @media (max-width: 600px) {
+             .reports-grid {
+                grid-template-columns: 1fr !important;
+             }
+        }
+    </style>
+</head>
+
+<body class="auth-body">
+
+    <header class="auth-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-circle"></div>
+                COLLIGO
+            </a>
+            <div class="auth-nav">
+                <span class="user-profile-icon"><i class="fas fa-user-circle"></i></span>
+                <span id="user-short-name" class="user-short-name">Admin</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <nav class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="menu-item"><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li class="menu-item active"><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
+                <li class="menu-item"><a href="#"><i class="fas fa-calendar-alt"></i> Attendance</a></li>
+                <li class="menu-item"><a href="#"><i class="fas fa-stream"></i> Activities</a></li>
+                <li class="menu-item"><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                <li class="menu-item logout-item">
+                    <a href="#" id="logout-button"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+                </li>
+            </ul>
+        </nav>
+
+        <section class="main-content">
+            <div class="content-header">
+                <h1>Add New Member</h1>
+                <p>Register a new user to your organization.</p>
+            </div>
+
+            <div class="add-member-form-container">
+                <h2 class="form-title">Member Details</h2>
+                <p class="form-subtitle">Fill out the required information for the new account.</p>
+
+                <form id="add-member-form">
+                    <div class="form-group">
+                        <label for="member-name">Full Name</label>
+                        <input type="text" id="member-name" required placeholder="John Doe">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="member-email">Email Address</label>
+                        <input type="email" id="member-email" required placeholder="john.doe@example.com">
+                    </div>
+
+                    <div class="reports-grid" style="grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="member-password">Initial Password</label>
+                            <input type="password" id="member-password" required placeholder="Auto-generated or Temporary Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="member-role">User Role</label>
+                            <select id="member-role" required>
+                                <option value="member" selected>Member (Default)</option>
+                                <option value="admin">Admin</option>
+                                <option value="super-admin">Super Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="reports-grid" style="grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="member-status">Account Status</label>
+                            <select id="member-status" required>
+                                <option value="active" selected>Active</option>
+                                <option value="pending">Pending Verification</option>
+                                <option value="disabled">Disabled</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="member-department">Department/Group</label>
+                            <input type="text" id="member-department" placeholder="e.g., Grade 10, Marketing, etc.">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <a href="members.html" class="cancel-button">Cancel</a>
+                        <button type="submit" class="submit-button">Add Member</button>
+                    </div>
+                </form>
+                
+                <div id="qrcode-display-container" style="text-align: center; margin-top: 20px;">
+                    </div>
+                
+                <div class="form-actions" style="justify-content: center; margin-top: 20px;">
+                    <button type="button" id="download-qr-button" class="submit-button" style="display: none;">
+                        <i class="fas fa-download"></i> Download QR Code
+                    </button>
+                </div>
+                
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDByxtekgi1CRBs0FWpSstrIWMlDbv1CHA",
+            authDomain: "responsive-app-df28f.firebaseapp.com",
+            projectId: "responsive-app-df28f",
+            storageBucket: "responsive-app-df28f.firebasestorage.app",
+            messagingSenderId: "242703032257",
+            appId: "1:242703032257:web:cf20ab70b92fa3609e5940",
+            measurementId: "G-MK0XLZ808S"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUserOrgId = null;
+        
+    
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDoc = await getDoc(userDocRef);
+                
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    currentUserOrgId = userData.organizationId;
+                    
+                    const fullName = userData.fullName || 'User';
+                    const firstName = fullName.split(' ')[0] || 'Admin';
+                    document.getElementById('user-short-name').textContent = firstName;
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+      
+        document.getElementById('add-member-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!currentUserOrgId) {
+                alert("Error: Organization data not loaded. Please try refreshing.");
+                return;
+            }
+
+            const name = document.getElementById('member-name').value;
+            const email = document.getElementById('member-email').value;
+            const password = document.getElementById('member-password').value;
+            const role = document.getElementById('member-role').value;
+            const status = document.getElementById('member-status').value;
+            const department = document.getElementById('member-department').value;
+            
+            try {
+                
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const newUserId = userCredential.user.uid;
+                
+                await setDoc(doc(db, 'users', newUserId), {
+                    fullName: name,
+                    email: email,
+                    role: role,
+                    organizationId: currentUserOrgId,
+                    status: status,
+                    department: department,
+                    memberId: newUserId, 
+                    createdAt: new Date()
+                });
+
+                
+                await runTransaction(db, async (transaction) => {
+                    const orgRef = doc(db, 'organizations', currentUserOrgId);
+                    const orgDoc = await transaction.get(orgRef);
+
+                    if (!orgDoc.exists()) {
+                        throw "Organization does not exist!";
+                    }
+
+                    const newMemberCount = (orgDoc.data().memberCount || 0) + 1;
+                    transaction.update(orgRef, { memberCount: newMemberCount });
+                });
+
+            
+                
+                document.getElementById('add-member-form').reset();
+                
+            
+                const qrContainer = document.getElementById('qrcode-display-container');
+                qrContainer.innerHTML = `<p id="member-id-text" style="color:var(--accent-green); font-weight:600; margin-bottom:10px;">Permanent Member ID: ${newUserId}</p>`;
+
+                new QRCode(qrContainer, {
+                    text: newUserId,
+                    width: 128,
+                    height: 128,
+                    colorDark: "#0A39A2", 
+                    colorLight: "#92F750",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+                
+                const downloadBtn = document.getElementById('download-qr-button');
+                downloadBtn.style.display = 'block';
+
+                downloadBtn.onclick = () => {
+                    const qrCanvas = qrContainer.querySelector('canvas');
+                    
+                    if (qrCanvas) {
+                        const dataURL = qrCanvas.toDataURL('image/png');
+                        
+                        const a = document.createElement('a');
+                        a.href = dataURL;
+                        a.download = `${name.replace(/\s/g, '_')}_ID_${newUserId.substring(0, 8)}_QR.png`;
+                        
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        
+                        alert('QR Code download started!');
+                    } else {
+                        alert('Error: Could not find QR code image data.');
+                    }
+                };
+
+                alert(`Member ${name} added successfully! \n\nPermanent Member ID: ${newUserId}\n\nThe QR code is displayed below. You can download it now.`);
+                
+                setTimeout(() => {
+                    window.location.href = 'members.html';
+                }, 5000); 
+
+                
+            } catch (error) {
+                console.error('Add Member Error:', error.message);
+                alert('Failed to add member: ' + error.message);
+            }
+        });
+
+        document.getElementById('logout-button').addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Logout error:", error.message);
+                alert('Logout failed: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collgo - Members</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css"> 
+</head>
+
+<body class="auth-body">
+
+    <header class="auth-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-circle"></div>
+                COLLIGO
+            </a>
+            <div class="auth-nav">
+                <span class="user-profile-icon"><i class="fas fa-user-circle"></i></span>
+                <span id="user-short-name" class="user-short-name">Admin</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <nav class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="menu-item"><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li class="menu-item active"><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
+                <li class="menu-item"><a href="#"><i class="fas fa-calendar-alt"></i> Attendance</a></li>
+                <li class="menu-item"><a href="#"><i class="fas fa-stream"></i> Activities</a></li>
+                <li class="menu-item"><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                <li class="menu-item logout-item">
+                    <a href="#" id="logout-button"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+                </li>
+            </ul>
+        </nav>
+
+        <section class="main-content">
+            <div class="content-header">
+                <h1>Members</h1>
+                <p>Manage all accounts and user roles within your organization.</p>
+            </div>
+
+            <div class="toolbar-container">
+                <div class="search-filter-group">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search members...">
+                    </div>
+                    <select class="filter-dropdown">
+                        <option value="all">Filter by Role (All)</option>
+                        <option value="super-admin">Super Admin</option>
+                        <option value="admin">Admin</option>
+                        <option value="member">Member</option>
+                    </select>
+                </div>
+                
+                <a href="add_member.html" class="add-member-button">
+                    <i class="fas fa-plus"></i> Add New Member
+                </a>
+            </div>
+
+            <div class="data-table-container">
+                <table class="members-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Member ID</th> 
+                            <th>Role</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="members-table-tbody">
+                        <tr>
+                            <td colspan="6" style="text-align:center; color: rgba(255, 255, 255, 0.5);">Loading members...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc, increment, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDByxtekgi1CRBs0FWpSstrIWMlDbv1CHA",
+            authDomain: "responsive-app-df28f.firebaseapp.com",
+            projectId: "responsive-app-df28f",
+            storageBucket: "responsive-app-df28f.firebasestorage.app",
+            messagingSenderId: "242703032257",
+            appId: "1:242703032257:web:cf20ab70b92fa3609e5940",
+            measurementId: "G-MK0XLZ808S"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUserOrgId = null;
+        const membersTableBody = document.querySelector('.members-table tbody');
+
+        window.deleteMember = async function(memberId, memberName) {
+            if (!confirm(`Are you sure you want to permanently delete member: ${memberName}? This action cannot be undone.`)) {
+                return;
+            }
+
+            try {
+            
+                const memberDocRef = doc(db, 'users', memberId);
+                await deleteDoc(memberDocRef);
+           
+                if (currentUserOrgId) {
+                    const orgDocRef = doc(db, 'organizations', currentUserOrgId);
+                    await updateDoc(orgDocRef, {
+                        memberCount: increment(-1)
+                    });
+                }
+                
+                alert(`Member ${memberName} deleted successfully.`);
+          
+                fetchMembers(currentUserOrgId);
+
+            } catch (error) {
+                console.error('Delete Member Error:', error.message);
+                alert('Failed to delete member: ' + error.message);
+            }
+        };
+
+        window.editMember = function(memberId) {
+         
+            window.location.href = `edit_member.html?id=${memberId}`;
+        };
+
+
+        const renderMembersTable = (members) => {
+            membersTableBody.innerHTML = ''; 
+
+            if (members.length === 0) {
+                membersTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: rgba(255, 255, 255, 0.5);">No members found in your organization.</td></tr>`;
+                return;
+            }
+            
+            members.forEach(member => {
+                const roleClass = (member.role || 'member').toLowerCase().replace(' ', '-');
+                const statusClass = (member.status || 'pending').toLowerCase().replace(' ', '-');
+                
+                const memberIdDisplay = member.memberId ? member.memberId.substring(0, 8) + '...' : 'N/A';
+                
+                const row = `
+                    <tr>
+                        <td class="member-name">
+                            <span class="profile-avatar"><i class="fas fa-user-circle"></i></span> 
+                            ${member.fullName || 'User'}
+                        </td>
+                        <td style="font-size:0.85em; color: rgba(255, 255, 255, 0.7);" title="${member.memberId}">${memberIdDisplay}</td>
+                        <td><span class="role-badge ${roleClass}">${member.role || 'Member'}</span></td>
+                        <td>${member.email}</td>
+                        <td><span class="status-badge ${statusClass}">${member.status || 'Pending'}</span></td>
+                        <td class="actions-cell">
+                            <i class="fas fa-edit action-icon" onclick="editMember('${member.memberId}')" title="Edit Member"></i>
+                            <i class="fas fa-trash-alt action-icon" onclick="deleteMember('${member.memberId}', '${member.fullName || member.email}')" title="Delete Member"></i>
+                        </td>
+                    </tr>
+                `;
+                membersTableBody.insertAdjacentHTML('beforeend', row);
+            });
+        };
+        
+        const fetchMembers = async (orgId) => {
+           
+            membersTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: rgba(255, 255, 255, 0.5);">Loading members...</td></tr>`;
+
+            try {
+                const usersRef = collection(db, 'users');
+                const q = query(usersRef, where("organizationId", "==", orgId));
+                
+                const querySnapshot = await getDocs(q);
+                const members = [];
+                
+                querySnapshot.forEach((doc) => {
+        
+                    const memberData = doc.data();
+                    memberData.memberId = doc.id; 
+                    members.push(memberData);
+                });
+                
+                renderMembersTable(members);
+
+            } catch (error) {
+                console.error("Error fetching members:", error);
+                membersTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: #ff6b6b;">Failed to load members.</td></tr>`;
+            }
+        };
+
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDoc = await getDoc(userDocRef);
+                
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    currentUserOrgId = userData.organizationId;
+                    
+                    const fullName = userData.fullName || user.email.split('@')[0];
+                    const firstName = fullName.split(' ')[0] || 'Admin';
+                    
+                    document.getElementById('user-short-name').textContent = firstName;
+                    
+                    if (currentUserOrgId) {
+                        fetchMembers(currentUserOrgId);
+                    }
+
+                } else {
+                     window.location.href = 'login.html';
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        document.getElementById('logout-button').addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Logout error:", error.message);
+                alert('Logout failed: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

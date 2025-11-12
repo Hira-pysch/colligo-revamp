@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collgo - Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css"> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.3/qrcode.min.js"></script> 
+</head>
+
+<body class="auth-body">
+
+    <header class="auth-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-circle"></div>
+                COLLIGO
+            </a>
+            <div class="auth-nav">
+                <span class="user-profile-icon"><i class="fas fa-user-circle"></i></span>
+                <span id="user-short-name" class="user-short-name">Admin</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <nav class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="menu-item"><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li class="menu-item"><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
+                <li class="menu-item"><a href="attendance.html"><i class="fas fa-calendar-alt"></i> Attendance</a></li>
+                <li class="menu-item"><a href="activities.html"><i class="fas fa-stream"></i> Activities</a></li>
+                <li class="menu-item active"><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                <li class="menu-item logout-item">
+                    <a href="#" id="logout-button"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+                </li>
+            </ul>
+        </nav>
+
+        <section class="main-content">
+            <div class="content-header">
+                <h1>Settings</h1>
+                <p>Customize your profile, organization, and preferences.</p>
+            </div>
+
+            <div class="settings-panels">
+ 
+                <div class="settings-panel">
+                    <h3><i class="fas fa-user"></i> Profile Settings</h3>
+                    <form id="profile-form">
+                        <div class="form-group">
+                            <label for="full-name">Full Name</label>
+                            <input type="text" id="full-name" name="fullName" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" placeholder="Enter your email" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone (Optional)</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+                        </div>
+                        <button type="submit" class="save-button"><i class="fas fa-save"></i> Save Profile</button>
+                    </form>
+                </div>
+
+                <div class="settings-panel">
+                    <h3><i class="fas fa-building"></i> Organization Settings</h3>
+                    <form id="org-form">
+                        <div class="form-group">
+                            <label for="org-name">Organization Name</label>
+                            <input type="text" id="org-name" name="orgName" placeholder="Enter organization name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="org-type">Organization Type</label>
+                            <select id="org-type" name="orgType">
+                                <option value="school">School</option>
+                                <option value="business">Business</option>
+                                <option value="club">Club</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="org-description">Description (Optional)</label>
+                            <textarea id="org-description" name="orgDescription" placeholder="Brief description of your organization"></textarea>
+                        </div>
+                        <button type="submit" class="save-button"><i class="fas fa-save"></i> Save Organization</button>
+                    </form>
+                </div>
+
+                <div class="settings-panel">
+                    <h3><i class="fas fa-lock"></i> Change Password</h3>
+                    <form id="password-form">
+                        <div class="form-group">
+                            <label for="current-password">Current Password</label>
+                            <input type="password" id="current-password" name="currentPassword" placeholder="Enter current password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-password">New Password</label>
+                            <input type="password" id="new-password" name="newPassword" placeholder="Enter new password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password">Confirm New Password</label>
+                            <input type="password" id="confirm-password" name="confirmPassword" placeholder="Confirm new password" required>
+                        </div>
+                        <button type="submit" class="save-button"><i class="fas fa-key"></i> Update Password</button>
+                    </form>
+                </div>
+
+                <div class="settings-panel">
+                    <h3><i class="fas fa-qrcode"></i> Organization QR Code</h3>
+                    <p>Share this QR code for easy member registration.</p>
+                    <div id="qrcode-container"></div>
+                    <button onclick="generateQR()" class="save-button"><i class="fas fa-refresh"></i> Generate QR Code</button>
+                </div>
+
+                <div class="settings-panel">
+                    <h3><i class="fas fa-bell"></i> Notifications</h3>
+                    <div class="form-group">
+                        <label><input type="checkbox" id="email-notif"> Email notifications for attendance</label>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" id="sms-notif"> SMS notifications for activities</label>
+                    </div>
+                    <button onclick="saveNotifications()" class="save-button"><i class="fas fa-save"></i> Save Preferences</button>
+                </div>
+
+                <div class="settings-panel danger-panel">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Account Actions</h3>
+                    <p>These actions are irreversible.</p>
+                    <button class="danger-button" onclick="confirmDeleteAccount()"><i class="fas fa-trash"></i> Delete Account</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDByxtekgi1CRBs0FWpSstrIWMlDbv1CHA",
+            authDomain: "responsive-app-df28f.firebaseapp.com",
+            projectId: "responsive-app-df28f",
+            storageBucket: "responsive-app-df28f.firebasestorage.app",
+            messagingSenderId: "242703032257",
+            appId: "1:242703032257:web:cf20ab70b92fa3609e5940",
+            measurementId: "G-MK0XLZ808S"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let currentUserData = null;
+
+        const loadSettings = async (user, userData) => {
+            document.getElementById('full-name').value = userData.fullName || '';
+            document.getElementById('email').value = user.email;
+            document.getElementById('phone').value = userData.phone || '';
+
+            const orgDocRef = doc(db, 'organizations', userData.organizationId);
+            const orgDoc = await getDoc(orgDocRef);
+            if (orgDoc.exists()) {
+                const orgData = orgDoc.data();
+                document.getElementById('org-name').value = orgData.name || '';
+                document.getElementById('org-type').value = orgData.type || 'school';
+                document.getElementById('org-description').value = orgData.description || '';
+            }
+            generateQR(); 
+        };
+
+        const saveProfile = async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('full-name').value;
+            const phone = document.getElementById('phone').value;
+            try {
+                await updateDoc(doc(db, 'users', currentUser.uid), { fullName, phone });
+                alert('Profile updated successfully!');
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Failed to update profile.');
+            }
+        };
+
+        const saveOrg = async (e) => {
+            e.preventDefault();
+            const orgName = document.getElementById('org-name').value;
+            const orgType = document.getElementById('org-type').value;
+            const orgDescription = document.getElementById('org-description').value;
+            try {
+                await updateDoc(doc(db, 'organizations', currentUserData.organizationId), { name: orgName, type: orgType, description: orgDescription });
+                alert('Organization updated successfully!');
+            } catch (error) {
+                console.error('Error updating organization:', error);
+                alert('Failed to update organization.');
+            }
+        };
+
+        const changePassword = async (e) => {
+            e.preventDefault();
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match.');
+                return;
+            }
+            try {
+                await updatePassword(currentUser, newPassword);
+                alert('Password updated successfully!');
+            } catch (error) {
+                console.error('Error updating password:', error);
+                alert('Failed to update password. Ensure you are logged in recently.');
+            }
+        };
+
+        const generateQR = () => {
+            const qrContainer = document.getElementById('qrcode-container');
+            qrContainer.innerHTML = '';
+            const qrData = `Join ${document.getElementById('org-name').value || 'our organization'} - Org ID: ${currentUserData?.organizationId || 'N/A'}`;
+            new QRCode(qrContainer, {
+                text: qrData,
+                width: 128,
+                height: 128,
+            });
+        };
+
+        const saveNotifications = () => {
+            const emailNotif = document.getElementById('email-notif').checked;
+            const smsNotif = document.getElementById('sms-notif').checked;
+          
+            alert(`Notifications saved: Email: ${emailNotif}, SMS: ${smsNotif}`);
+        };
+
+        const confirmDeleteAccount = () => {
+            if (confirm('Are you sure you want to delete your account? This cannot be undone.')) {
+                alert('Delete account feature coming soon!');
+            }
+        };
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDoc = await getDoc(userDocRef);
+                if (userDoc.exists()) {
+                    currentUserData = userDoc.data();
+                    const fullName = currentUserData.fullName || user.email.split('@')[0];
+                    const firstName = fullName.split(' ')[0] || 'Admin';
+                    document.getElementById('user-short-name').textContent = firstName;
+                    await loadSettings(user, currentUserData);
+                } else {
+                    window.location.href = 'login.html';
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        document.getElementById('profile-form').addEventListener('submit', saveProfile);
+        document.getElementById('org-form').addEventListener('submit', saveOrg);
+        document.getElementById('password-form').addEventListener('submit', changePassword);
+
+        document.getElementById('logout-button').addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Logout error:", error.message);
+                alert('Logout failed: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

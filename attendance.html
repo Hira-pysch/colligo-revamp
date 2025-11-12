@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collgo - Attendance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css"> 
+</head>
+
+<body class="auth-body">
+
+    <header class="auth-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-circle"></div>
+                COLLIGO
+            </a>
+            <div class="auth-nav">
+                <span class="user-profile-icon"><i class="fas fa-user-circle"></i></span>
+                <span id="user-short-name" class="user-short-name">Admin</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <nav class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="menu-item"><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li class="menu-item"><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
+                <li class="menu-item active"><a href="attendance.html"><i class="fas fa-calendar-alt"></i> Attendance</a></li>
+                <li class="menu-item"><a href="activities.html"><i class="fas fa-stream"></i> Activities</a></li>
+                <li class="menu-item"><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                <li class="menu-item logout-item">
+                    <a href="#" id="logout-button"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+                </li>
+            </ul>
+        </nav>
+
+        <section class="main-content">
+            <div class="content-header">
+                <h1>Attendance</h1>
+                <p>Track and manage attendance records for your organization.</p>
+            </div>
+
+            <div class="toolbar-container">
+                <div class="search-filter-group">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search by member name...">
+                    </div>
+                    <select class="filter-dropdown">
+                        <option value="all">Filter by Date (All)</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                </div>
+                <button class="add-member-button" onclick="alert('Add Check-in feature coming soon!')">
+                    <i class="fas fa-plus"></i> Add Check-in
+                </button>
+            </div>
+
+            <div class="data-table-container">
+                <table class="members-table">
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Date</th>
+                            <th>Check-in Time</th>
+                            <th>Check-out Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendance-table-body">
+                        <tr>
+                            <td colspan="5" style="text-align:center; color: rgba(255, 255, 255, 0.5);">Loading attendance...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDByxtekgi1CRBs0FWpSstrIWMlDbv1CHA",
+            authDomain: "responsive-app-df28f.firebaseapp.com",
+            projectId: "responsive-app-df28f",
+            storageBucket: "responsive-app-df28f.firebasestorage.app",
+            messagingSenderId: "242703032257",
+            appId: "1:242703032257:web:cf20ab70b92fa3609e5940",
+            measurementId: "G-MK0XLZ808S"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUserOrgId = null;
+
+        const renderAttendanceTable = (records) => {
+            const tbody = document.getElementById('attendance-table-body');
+            tbody.innerHTML = '';
+            if (records.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: rgba(255, 255, 255, 0.5);">No attendance records found.</td></tr>`;
+                return;
+            }
+            records.forEach(record => {
+                const row = `
+                    <tr>
+                        <td>${record.memberName || 'Unknown'}</td>
+                        <td>${record.date || 'N/A'}</td>
+                        <td>${record.checkInTime || 'N/A'}</td>
+                        <td>${record.checkOutTime || 'N/A'}</td>
+                        <td><span class="status-badge ${record.status || 'pending'}">${record.status || 'Pending'}</span></td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', row);
+            });
+        };
+
+        const fetchAttendance = async (orgId) => {
+            try {
+                const attendanceRef = collection(db, 'attendance');
+                const q = query(attendanceRef, where("organizationId", "==", orgId));
+                const querySnapshot = await getDocs(q);
+                const records = [];
+                querySnapshot.forEach((doc) => {
+                    records.push(doc.data());
+                });
+                renderAttendanceTable(records);
+            } catch (error) {
+                console.error("Error fetching attendance:", error);
+                document.getElementById('attendance-table-body').innerHTML = `<tr><td colspan="5" style="text-align:center; color: #ff6b6b;">Failed to load attendance.</td></tr>`;
+            }
+        };
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDoc = await getDoc(userDocRef);
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    currentUserOrgId = userData.organizationId;
+                    const fullName = userData.fullName || user.email.split('@')[0];
+                    const firstName = fullName.split(' ')[0] || 'Admin';
+                    document.getElementById('user-short-name').textContent = firstName;
+                    if (currentUserOrgId) fetchAttendance(currentUserOrgId);
+                } else {
+                    window.location.href = 'login.html';
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        document.getElementById('logout-button').addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Logout error:", error.message);
+                alert('Logout failed: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

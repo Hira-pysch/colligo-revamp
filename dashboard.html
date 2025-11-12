@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collgo - Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css"> 
+</head>
+
+<body class="auth-body">
+
+    <header class="auth-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-circle"></div>
+                COLLIGO
+            </a>
+            <div class="auth-nav">
+                <span class="user-profile-icon"><i class="fas fa-user-circle"></i></span>
+                <span id="user-short-name" class="user-short-name">Admin</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <nav class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="menu-item"><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li class="menu-item"><a href="members.html"><i class="fas fa-users"></i> Members</a></li>
+                <li class="menu-item"><a href="attendance.html"><i class="fas fa-calendar-alt"></i> Attendance</a></li>
+                <li class="menu-item"><a href="activities.html"><i class="fas fa-stream"></i> Activities</a></li>
+                <li class="menu-item active"><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                <li class="menu-item logout-item">
+                    <a href="#" id="logout-button"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+                </li>
+            </ul>
+        </nav>
+
+        <section class="main-content">
+            <div class="content-header">
+                <h1>Settings</h1>
+                <p>Manage your profile and organization settings.</p>
+            </div>
+
+            <div class="settings-panels">
+                <div class="settings-panel">
+                    <h3>Profile Settings</h3>
+                    <form id="profile-form">
+                        <div class="form-group">
+                            <label for="full-name">Full Name</label>
+                            <input type="text" id="full-name" name="fullName" placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" placeholder="Enter your email" readonly>
+                        </div>
+                        <button type="submit" class="save-button">Save Changes</button>
+                    </form>
+                </div>
+
+                <div class="settings-panel">
+                    <h3>Organization Settings</h3>
+                    <form id="org-form">
+                        <div class="form-group">
+                            <label for="org-name">Organization Name</label>
+                            <input type="text" id="org-name" name="orgName" placeholder="Enter organization name">
+                        </div>
+                        <div class="form-group">
+                            <label for="org-type">Organization Type</label>
+                            <select id="org-type" name="orgType">
+                                <option value="school">School</option>
+                                <option value="business">Business</option>
+                                <option value="club">Club</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="save-button">Save Changes</button>
+                    </form>
+                </div>
+
+                <div class="settings-panel">
+                    <h3>Account Actions</h3>
+                    <button class="danger-button" onclick="alert('Delete account feature coming soon!')">Delete Account</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDByxtekgi1CRBs0FWpSstrIWMlDbv1CHA",
+            authDomain: "responsive-app-df28f.firebaseapp.com",
+            projectId: "responsive-app-df28f",
+            storageBucket: "responsive-app-df28f.firebasestorage.app",
+            messagingSenderId: "242703032257",
+            appId: "1:242703032257:web:cf20ab70b92fa3609e5940",
+            measurementId: "G-MK0XLZ808S"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let currentUserData = null;
+        let currentOrgData = null;
+
+        const loadSettings = async (user, userData) => {
+            document.getElementById('full-name').value = userData.fullName || '';
+            document.getElementById('email').value = user.email;
+
+            const orgDocRef = doc(db, 'organizations', userData.organizationId);
+            const orgDoc = await getDoc(orgDocRef);
+            if (orgDoc.exists()) {
+                currentOrgData = orgDoc.data();
+                document.getElementById('org-name').value = currentOrgData.name || '';
+                document.getElementById('org-type').value = currentOrgData.type || 'school';
+            }
+        };
+
+        const saveProfile = async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('full-name').value;
+            try {
+                await updateDoc(doc(db, 'users', currentUser.uid), { fullName });
+                alert('Profile updated successfully!');
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Failed to update profile.');
+            }
+        };
+
+        const saveOrg = async (e) => {
+            e.preventDefault();
+            const orgName = document.getElementById('org-name').value;
+            const orgType = document.getElementById('org-type').value;
+            try {
+                await updateDoc(doc(db, 'organizations', currentUserData.organizationId), { name: orgName, type: orgType });
+                alert('Organization updated successfully!');
+            } catch (error) {
+                console.error('Error updating organization:', error);
+                alert('Failed to update organization.');
+            }
+        };
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDoc = await getDoc(userDocRef);
+                if (userDoc.exists()) {
+                    currentUserData = userDoc.data();
+                    const fullName = currentUserData.fullName || user.email.split('@')[0];
+                    const firstName = fullName.split(' ')[0] || 'Admin';
+                    document.getElementById('user-short-name').textContent = firstName;
+                    await loadSettings(user, currentUserData);
+                } else {
+                    window.location.href = 'login.html';
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        document.getElementById('profile-form').addEventListener('submit', saveProfile);
+        document.getElementById('org-form').addEventListener('submit', saveOrg);
+
+        document.getElementById('logout-button').addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Logout error:", error.message);
+                alert('Logout failed: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
