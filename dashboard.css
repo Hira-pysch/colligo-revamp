@@ -621,3 +621,57 @@
         .update-member-button:hover {
             background-color: #79d442;
         }
+
+/* naduggang for dashboard */
+
+.dashboard-content {
+  padding: 2rem;
+  color: #fff;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.stat-box {
+  background: #2a2d3e;
+  border-radius: 12px;
+  padding: 1.8rem;
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.4);
+}
+
+.stat-box i {
+  font-size: 2rem;
+  color: #00ff99;
+  margin-bottom: 10px;
+}
+
+.stat-box h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.stat-box p {
+  color: #bbb;
+  font-size: 0.95rem;
+  margin-top: 6px;
+}
+
+.upcoming-header {
+  margin-top: 2rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+}
