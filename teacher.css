@@ -1,0 +1,94 @@
+:root{
+  --bg1: #1e1f2a;
+  --bg2: #2a2a36;
+  --accent: #13c6cf; 
+  --muted: rgba(13, 237, 237, 0.844);
+  --card: rgba(255,255,255,0.03);
+}
+
+*{box-sizing:border-box}
+body.auth-body{
+  margin:0;
+  min-height:100vh;
+  font-family:'Poppins',sans-serif;
+  background: linear-gradient(135deg, var(--bg1), #2b2b39);
+  color:#fff;
+}
+
+/* header */
+.auth-header{
+  background: rgba(0,0,0,0.85);
+  padding:12px 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+.auth-header .container{
+  max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 20px;
+}
+.logo{font-weight:700;color:#fff;text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo-circle{width:30px;height:30px;border-radius:50%;background:var(--accent)}
+.logo-circle.teacher-accent{background:var(--accent)}
+.auth-nav{display:flex;align-items:center;gap:12px}
+.user-profile-icon{color:var(--accent);font-size:1.4rem}
+.user-short-name{font-weight:600;color:#fff}
+
+/* layout grid */
+.dashboard-grid{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - 60px)}
+.sidebar{background: rgba(0,0,0,0.95); padding:20px 12px; box-shadow:2px 0 10px rgba(0,0,0,0.6)}
+.sidebar-menu{list-style:none;padding:0;margin:0}
+.sidebar .menu-item{margin-bottom:8px}
+.sidebar .menu-item a{display:flex;align-items:center;gap:12px;padding:10px 14px;color:var(--muted);text-decoration:none;border-radius:8px}
+.sidebar .menu-item a i{width:22px;text-align:center}
+.sidebar .menu-item.active a,
+.sidebar .menu-item a:hover{background:rgba(58,160,255,0.12);color:var(--accent)}
+.logout-item a{color:#ff6b6b}
+.logout-item a:hover{background:rgba(255,107,107,0.12)}
+
+/* main content */
+.main-content{padding:28px;overflow:auto;background:transparent}
+.content-header h1{font-size:2rem;margin:0 0 6px}
+.content-header p{color:var(--muted);margin:0 0 18px}
+
+/* top row tiles */
+.top-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:18px}
+.tile{background:var(--card);padding:22px;border-radius:12px;text-align:center;box-shadow:0 6px 12px rgba(0,0,0,0.35)}
+.tile-icon{font-size:1.9rem;color:var(--accent);margin-bottom:8px}
+.tile h3{font-size:1.6rem;margin:6px 0}
+.tile p{color:var(--muted);margin:0}
+
+/* announce box */
+.announce-box{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 12px rgba(0,0,0,0.35)}
+.announce-box h3{margin:0 0 8px}
+.announce-box textarea{width:100%;min-height:100px;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);color:#fff;resize:vertical}
+.announce-actions{display:flex;align-items:center;gap:12px;margin-top:10px}
+.muted{color:var(--muted);font-size:0.9rem}
+
+/* form + panels */
+.form-panel, .data-panel, .scan-panel, .scan-log, .explain-box{
+  background:var(--card);padding:18px;border-radius:12px;margin-top:16px;box-shadow:0 6px 12px rgba(0,0,0,0.35)
+}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;margin-bottom:6px;color:var(--muted)}
+.form-group input, .form-group textarea, .form-group select{
+  width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);color:#fff
+}
+.form-actions{display:flex;align-items:center;gap:12px;margin-top:8px}
+.btn{padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#fff;cursor:pointer}
+.btn.primary{background:var(--accent);color:#000;border:none}
+.btn:hover{transform:translateY(-2px);transition:all .12s ease}
+
+/* lists */
+.list{list-style:none;padding:0;margin:0}
+.list li{padding:10px;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;justify-content:space-between;align-items:center;color:var(--muted)}
+.list li:last-child{border-bottom:none}
+
+/* scan area */
+.scan-panel input{padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);width:100%;margin-top:8px;background:rgba(255,255,255,0.02);color:#fff}
+
+/* utility */
+.hidden{display:none}
+
+/* responsive */
+@media (max-width:900px){
+  .dashboard-grid{grid-template-columns:1fr}
+  .sidebar{display:none}
+}
