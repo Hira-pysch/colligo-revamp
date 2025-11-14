@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Colligo - Teacher Module</title>
+
+  <!-- Google font + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- Teacher CSS -->
+  <link rel="stylesheet" href="teacher.css">
+</head>
+<body class="auth-body">
+
+  <header class="auth-header">
+    <div class="container">
+      <a href="#" class="logo">
+        <div class="logo-circle teacher-accent"></div>
+        COLLIGO
+      </a>
+      <div class="auth-nav">
+        <span class="user-profile-icon"><i class="fas fa-user-circle"></i></span>
+        <span id="user-short-name" class="user-short-name">Teacher</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-grid">
+    <nav class="sidebar">
+      <ul class="sidebar-menu">
+        <li class="menu-item active" data-target="dashboard"><a href="#"><i class="fas fa-th-large"></i> Dashboard</a></li>
+        <li class="menu-item" data-target="add-students"><a href="#"><i class="fas fa-user-plus"></i> Add Students</a></li>
+        <li class="menu-item" data-target="id-scans"><a href="#"><i class="fas fa-qrcode"></i> ID Scans</a></li>
+        <li class="menu-item" data-target="activities"><a href="#"><i class="fas fa-bullhorn"></i> Activities</a></li>
+        <li class="menu-item" data-target="settings"><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+        <li class="menu-item logout-item"><a href="#" id="logout-button"><i class="fas fa-sign-out-alt"></i> Log Out</a></li>
+      </ul>
+    </nav>
+
+    <section class="main-content">
+      <!-- Dashboard -->
+      <div id="section-dashboard" class="page-section">
+        <div class="content-header">
+          <h1>Teacher Dashboard</h1>
+          <p>Overview of your class and quick actions.</p>
+        </div>
+
+        <div class="top-row">
+          <div class="tile">
+            <i class="fas fa-users tile-icon teacher-accent"></i>
+            <h3 id="tile-students">0</h3>
+            <p>Students</p>
+          </div>
+
+          <div class="tile">
+            <i class="fas fa-user-check tile-icon teacher-accent"></i>
+            <h3 id="tile-attendance">0</h3>
+            <p>Attendance Today</p>
+          </div>
+        </div>
+
+        <div class="announce-box">
+          <h3>Broadcast Announcement</h3>
+          <textarea id="broadcast-text" placeholder="Write an announcement to your class..."></textarea>
+          <div class="announce-actions">
+            <button id="send-broadcast" class="btn primary">Send</button>
+            <span id="broadcast-status" class="muted"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Students -->
+      <div id="section-add-students" class="page-section hidden">
+        <div class="content-header">
+          <h1>Add Students</h1>
+          <p>Add new students and assign them to your class.</p>
+        </div>
+
+        <div class="form-panel">
+          <form id="add-student-form">
+            <div class="form-group">
+              <label>Full name</label>
+              <input id="stu-fullname" required />
+            </div>
+            <div class="form-group">
+              <label>ID Number (barcode)</label>
+              <input id="stu-idnumber" required />
+            </div>
+            <div class="form-group">
+              <label>Section / Class</label>
+              <input id="stu-section" placeholder="e.g., Grade 11 - A" />
+            </div>
+            <div class="form-actions">
+              <button class="btn primary" type="submit">Add Student</button>
+              <span id="add-student-status" class="muted"></span>
+            </div>
+          </form>
+        </div>
+
+        <div class="data-panel">
+          <h3>Students (recent)</h3>
+          <ul id="students-list" class="list"></ul>
+        </div>
+      </div>
+
+      <!-- ID Scans -->
+      <div id="section-id-scans" class="page-section hidden">
+        <div class="content-header">
+          <h1>ID Scans</h1>
+          <p>Scan student ID barcodes here — attendance is recorded automatically.</p>
+        </div>
+
+        <div class="scan-panel">
+          <label for="scan-input">Scan / Enter ID Barcode</label>
+          <input id="scan-input" placeholder="Scan barcode or paste ID number then press Enter" />
+          <div class="scan-actions">
+            <button id="start-scan" class="btn">Start Scan</button>
+            <button id="manual-scan" class="btn primary">Record Manually</button>
+            <span id="scan-status" class="muted"></span>
+          </div>
+        </div>
+
+        <div class="scan-log">
+          <h3>Recent Scans</h3>
+          <ul id="scan-list" class="list"></ul>
+        </div>
+
+        <div class="explain-box">
+          <p><strong>Logic used:</strong> if scan is within class window → marked present. If >10 minutes after class start → marked <em>late</em>. If > (first-subjects duration) → treated as <em>cutting class</em> and adviser is notified.</p>
+        </div>
+      </div>
+
+      <!-- Activities -->
+      <div id="section-activities" class="page-section hidden">
+        <div class="content-header">
+          <h1>Activities</h1>
+          <p>Class and school activities visible to your students.</p>
+        </div>
+
+        <div class="form-panel">
+          <form id="add-activity-form">
+            <div class="form-group">
+              <label>Title</label>
+              <input id="activity-title" required />
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea id="activity-desc"></textarea>
+            </div>
+            <div class="form-actions">
+              <button class="btn primary" type="submit">Create Activity</button>
+              <span id="activity-status" class="muted"></span>
+            </div>
+          </form>
+        </div>
+
+        <div class="data-panel">
+          <h3>Upcoming Activities</h3>
+          <ul id="activities-list" class="list"></ul>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div id="section-settings" class="page-section hidden">
+        <div class="content-header">
+          <h1>Settings</h1>
+          <p>Class time configuration and preferences.</p>
+        </div>
+
+        <div class="form-panel">
+          <form id="settings-form">
+            <div class="form-group">
+              <label>Class Start Time</label>
+              <input id="setting-start-time" type="time" />
+            </div>
+            <div class="form-group">
+              <label>First-subjects duration (minutes)</label>
+              <input id="setting-first-duration" type="number" min="10" max="480" />
+            </div>
+            <div class="form-actions">
+              <button class="btn primary" type="submit">Save Settings</button>
+              <span id="settings-status" class="muted"></span>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Firebase + teacher JS -->
+  <script type="module" src="teacher.js"></script>
+</body>
+</html>
